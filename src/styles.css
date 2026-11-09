@@ -1,0 +1,128 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: Inter, sans-serif;
+  --font-sans--font-feature-settings: 'cv11';
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: var(--color-zinc-300);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-zinc-700);
+}
+
+.price-print {
+  background: white;
+  color: black;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+}
+
+.price-print h2 {
+  margin: 0 0 20px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.price-print table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.price-print th,
+.price-print td {
+  border: 1px solid black;
+  padding: 4px 6px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.price-print th {
+  text-align: center;
+  font-weight: 600;
+}
+
+.price-print .price-number {
+  width: 36px;
+  text-align: center;
+}
+
+.price-print .price-value {
+  width: 130px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.price-print .price-check {
+  width: 34px;
+  text-align: center;
+}
+
+.price-print .price-category {
+  text-align: center;
+  font-weight: 700;
+}
+
+.price-print .price-total {
+  text-align: right;
+  font-weight: 700;
+}
+
+.price-notes {
+  margin-top: 16px;
+  white-space: pre-wrap;
+  font-size: 12px;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  .price-print,
+  .price-print * {
+    visibility: visible !important;
+  }
+
+  .price-print {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    padding: 10mm;
+  }
+}
+
+:root { --accent: #18181b; --accent-hover: #09090b; --accent-soft: #f4f4f5; }
+:root[data-accent='blue'] { --accent: #2563eb; --accent-hover: #1d4ed8; --accent-soft: #eff6ff; }
+:root[data-accent='emerald'] { --accent: #059669; --accent-hover: #047857; --accent-soft: #ecfdf5; }
+:root[data-accent='violet'] { --accent: #7c3aed; --accent-hover: #6d28d9; --accent-soft: #f5f3ff; }
+:root[data-accent='amber'] { --accent: #d97706; --accent-hover: #b45309; --accent-soft: #fffbeb; }
+:root[data-accent='rose'] { --accent: #e11d48; --accent-hover: #be123c; --accent-soft: #fff1f2; }
+
+button svg,
+a svg,
+[data-slot='icon'] {
+  color: var(--accent);
+}
