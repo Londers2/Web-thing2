@@ -124,5 +124,5 @@ body {
 button svg,
 a svg,
 [data-slot='icon'] {
-  color: var(--accent);
+  color: var(--btn-icon, var(--accent));
 }

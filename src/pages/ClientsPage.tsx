@@ -47,12 +47,31 @@ export function ClientsPage() {
 
   return (
     <>
-      <div className="flex items-end justify-between gap-4"><Heading>Клиенты</Heading><Button onClick={() => { setSelected(null); setOpen(true) }}><PlusIcon />Добавить клиента</Button></div>
-      <InputGroup className="my-6 rounded-xl bg-zinc-50 p-2 sm:max-w-md dark:bg-white/[2.5%]"><MagnifyingGlassIcon /><Input aria-label="Поиск клиентов" placeholder="Имя, телефон или email" value={query} onChange={(e) => setQuery(e.target.value)} /></InputGroup>
+      <div className="flex flex-wrap items-end justify-between gap-4"><Heading>Клиенты</Heading><Button className="max-sm:w-full" onClick={() => { setSelected(null); setOpen(true) }}><PlusIcon />Добавить клиента</Button></div>
+      <div className="my-6 w-full sm:max-w-md"><InputGroup><MagnifyingGlassIcon /><Input aria-label="Поиск клиентов" placeholder="Имя, телефон или email" value={query} onChange={(e) => setQuery(e.target.value)} /></InputGroup></div>
       <ErrorAlert>{error}</ErrorAlert>
       {loading ? <Loading /> : clients.length === 0 ? <EmptyState title={query ? 'Клиенты не найдены' : 'Клиентов пока нет'} description={query ? 'Попробуйте изменить запрос.' : 'Добавьте клиента, чтобы связать его с первым заказом.'} action={!query && <Button onClick={() => setOpen(true)}><PlusIcon />Добавить клиента</Button>} /> : (
         <>
-          <Table className="mt-6 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]"><TableHead><TableRow><TableHeader>Клиент</TableHeader><TableHeader>Позывной</TableHeader><TableHeader>Телефон</TableHeader><TableHeader>Email</TableHeader><TableHeader><span className="sr-only">Действия</span></TableHeader></TableRow></TableHead><TableBody>{clients.map((client) => <TableRow key={client.id}><TableCell className="font-medium">{client.name}</TableCell><TableCell className="text-zinc-500">{client.callSign || '—'}</TableCell><TableCell className="text-zinc-500">{client.phone || '—'}</TableCell><TableCell className="text-zinc-500">{client.email || '—'}</TableCell><TableCell><Button plain aria-label={`Изменить ${client.name}`} onClick={() => { setSelected(client); setOpen(true) }}><PencilSquareIcon /></Button></TableCell></TableRow>)}</TableBody></Table>
+          <div className="space-y-3 md:hidden">
+            {clients.map((client) => (
+              <section key={client.id} className="min-w-0 rounded-xl border border-zinc-950/10 p-4 dark:border-white/10">
+                <div className="flex min-w-0 items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="break-words font-medium">{client.name}</div>
+                    {client.callSign && <div className="break-words text-sm text-zinc-500">{client.callSign}</div>}
+                  </div>
+                  <Button plain className="shrink-0" aria-label={`Изменить ${client.name}`} onClick={() => { setSelected(client); setOpen(true) }}><PencilSquareIcon /></Button>
+                </div>
+                <dl className="mt-4 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 text-sm">
+                  <dt className="text-zinc-500">Телефон</dt><dd className="text-right break-words">{client.phone || '—'}</dd>
+                  <dt className="text-zinc-500">Email</dt><dd className="text-right break-all">{client.email || '—'}</dd>
+                </dl>
+              </section>
+            ))}
+          </div>
+          <div className="mt-6 hidden min-w-0 max-w-full md:block">
+            <Table className="[--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]"><TableHead><TableRow><TableHeader>Клиент</TableHeader><TableHeader>Позывной</TableHeader><TableHeader>Телефон</TableHeader><TableHeader>Email</TableHeader><TableHeader><span className="sr-only">Действия</span></TableHeader></TableRow></TableHead><TableBody>{clients.map((client) => <TableRow key={client.id}><TableCell className="font-medium">{client.name}</TableCell><TableCell className="text-zinc-500">{client.callSign || '—'}</TableCell><TableCell className="text-zinc-500">{client.phone || '—'}</TableCell><TableCell className="text-zinc-500">{client.email || '—'}</TableCell><TableCell><Button plain aria-label={`Изменить ${client.name}`} onClick={() => { setSelected(client); setOpen(true) }}><PencilSquareIcon /></Button></TableCell></TableRow>)}</TableBody></Table>
+          </div>
           <Pagination page={page} pages={pages} total={total} onPage={setPage} />
         </>
       )}

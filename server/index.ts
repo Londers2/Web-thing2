@@ -46,6 +46,7 @@ app.use(helmet({
       imgSrc: ["'self'", 'data:', 'blob:'],
       connectSrc: ["'self'", 'ws:', 'wss:'],
       frameSrc: ["'self'", 'https://yandex.ru', 'https://yandex.com'],
+      upgradeInsecureRequests: process.env.COOKIE_SECURE === 'true' ? [] : null,
     },
   },
 }))
