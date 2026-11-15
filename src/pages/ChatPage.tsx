@@ -74,7 +74,7 @@ export function ChatPage() {
   return (
     <>
       <ErrorAlert>{error}</ErrorAlert>
-      <div className="grid h-[calc(100svh-8rem)] min-h-[520px] overflow-hidden rounded-xl border border-zinc-950/10 max-md:-m-6 max-md:h-[calc(100dvh-4rem)] max-md:min-h-0 max-md:w-full max-md:max-w-full max-md:grid-cols-[minmax(0,1fr)] max-md:rounded-none max-md:border-0 md:grid-cols-[320px_1fr] dark:border-white/10">
+      <div className="grid h-[calc(100svh-8rem)] min-h-[520px] overflow-hidden rounded-xl border border-zinc-950/10 max-md:fixed max-md:inset-x-0 max-md:top-[3.75rem] max-md:bottom-0 max-md:z-10 max-md:m-0 max-md:h-auto max-md:min-h-0 max-md:w-full max-md:max-w-none max-md:grid-cols-[minmax(0,1fr)] max-md:rounded-none max-md:border-0 max-md:bg-white md:grid-cols-[320px_minmax(0,1fr)] dark:border-white/10 dark:max-md:bg-zinc-900">
         <aside className={`flex min-h-0 min-w-0 flex-col border-r border-zinc-950/10 dark:border-white/10 ${selected ? 'max-md:hidden' : ''}`}>
           <div className="space-y-3 border-b border-zinc-950/10 p-3 dark:border-white/10">
             <InputGroup><MagnifyingGlassIcon /><Input aria-label="Поиск диалогов" placeholder="Поиск" value={query} onChange={(e) => setQuery(e.target.value)} /></InputGroup>
@@ -92,10 +92,10 @@ export function ChatPage() {
             })}
           </div>
         </aside>
-        <section className={`flex min-h-0 min-w-0 flex-col ${!selected ? 'max-md:hidden' : ''}`}>
+        <section className={`flex min-h-0 min-w-0 w-full flex-col ${!selected ? 'max-md:hidden' : ''}`}>
           {selected ? <>
-            <div className="flex items-center gap-3 border-b border-zinc-950/10 px-4 py-3 dark:border-white/10"><Button plain className="md:hidden" aria-label="Назад к диалогам" onClick={back}><ArrowLeftIcon /></Button>{selected.type === 'direct' ? <UserIcon className="size-5 text-zinc-400" /> : <ChatBubbleLeftRightIcon className="size-5 text-zinc-400" />}<div className="min-w-0 flex-1"><div className="truncate text-sm font-semibold">{selected.title}</div><div className="truncate text-xs text-zinc-500">{selected.subtitle}</div></div>{selected.type === 'order' && <Link href={`/orders/${selected.id}`} className="text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-white">Открыть заказ</Link>}</div>
-            <div className="min-h-0 flex-1 p-4"><ChatBox key={`${selected.type}:${selected.id}`} orderId={selected.type === 'order' ? selected.id : undefined} peerId={selected.type === 'direct' ? selected.id : undefined} onActivity={() => void load()} /></div>
+            <div className="flex shrink-0 items-center gap-3 border-b border-zinc-950/10 px-4 py-3 dark:border-white/10"><Button plain className="md:hidden" aria-label="Назад к диалогам" onClick={back}><ArrowLeftIcon /></Button>{selected.type === 'direct' ? <UserIcon className="size-5 shrink-0 text-zinc-400" /> : <ChatBubbleLeftRightIcon className="size-5 shrink-0 text-zinc-400" />}<div className="min-w-0 flex-1"><div className="truncate text-sm font-semibold">{selected.title}</div><div className="truncate text-xs text-zinc-500">{selected.subtitle}</div></div>{selected.type === 'order' && <Link href={`/orders/${selected.id}`} className="shrink-0 text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-white">Открыть заказ</Link>}</div>
+            <div className="min-h-0 min-w-0 w-full flex-1 p-4 max-md:p-3"><ChatBox key={`${selected.type}:${selected.id}`} orderId={selected.type === 'order' ? selected.id : undefined} peerId={selected.type === 'direct' ? selected.id : undefined} onActivity={() => void load()} /></div>
           </> : <div className="flex h-full flex-col items-center justify-center p-8 text-center"><ChatBubbleLeftRightIcon className="size-10 text-zinc-300" /><p className="mt-4 text-sm font-medium">Выберите диалог</p><p className="mt-1 text-sm text-zinc-500">Напишите сотруднику или откройте обсуждение заказа.</p></div>}
         </section>
       </div>

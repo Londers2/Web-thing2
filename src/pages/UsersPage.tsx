@@ -39,5 +39,45 @@ export function UsersPage() {
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'Не удалось изменить доступ') }
   }
 
-  return <><div className="flex items-end justify-between gap-4"><Heading>Пользователи</Heading><Button onClick={() => { setSelected(null); setOpen(true) }}><PlusIcon />Добавить пользователя</Button></div><p className="mt-2 text-sm text-zinc-500">Управление доступом к рабочему пространству.</p><ErrorAlert>{error}</ErrorAlert>{loading ? <Loading /> : <Table className="mt-8 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]"><TableHead><TableRow><TableHeader><span className="sr-only">Аватар</span></TableHeader><TableHeader>Имя</TableHeader><TableHeader>Email</TableHeader><TableHeader>Роль</TableHeader><TableHeader>Роль в команде</TableHeader><TableHeader>Статус</TableHeader><TableHeader>Добавлен</TableHeader><TableHeader><span className="sr-only">Действия</span></TableHeader></TableRow></TableHead><TableBody>{users.map((user) => <TableRow key={user.id}><TableCell><UserAvatar user={user} className="size-8" /></TableCell><TableCell className="font-medium">{user.name}{user.id === currentUser?.id ? ' (вы)' : ''}</TableCell><TableCell className="text-zinc-500">{user.email}</TableCell><TableCell>{user.role === 'admin' ? 'Администратор' : 'Сотрудник'}</TableCell><TableCell className="text-zinc-500">{(user.jobRoles || [user.jobRole || 'manager']).map((role) => roleLabels[role]).join(', ')}</TableCell><TableCell><Badge color={user.active ? 'lime' : 'zinc'}>{user.active ? 'Активен' : 'Отключён'}</Badge></TableCell><TableCell className="text-zinc-500">{formatDate(user.createdAt)}</TableCell><TableCell><div className="flex justify-end gap-1"><Button plain aria-label="Изменить" onClick={() => { setSelected(user); setOpen(true) }}><PencilSquareIcon /></Button>{user.id !== currentUser?.id && <Button plain onClick={() => void toggleActive(user)}>{user.active ? 'Отключить' : 'Включить'}</Button>}</div></TableCell></TableRow>)}</TableBody></Table>}<UserFormDialog open={open} onClose={() => setOpen(false)} user={selected} onSaved={saved} /></>
+  return (
+    <>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <Heading>Пользователи</Heading>
+        <Button className="max-sm:w-full" onClick={() => { setSelected(null); setOpen(true) }}><PlusIcon />Добавить пользователя</Button>
+      </div>
+      <p className="mt-2 text-sm text-zinc-500">Управление доступом к рабочему пространству.</p>
+      <ErrorAlert>{error}</ErrorAlert>
+      {loading ? <Loading /> : (
+        <>
+          <div className="mt-6 space-y-3 md:hidden">
+            {users.map((user) => (
+              <section key={user.id} className="min-w-0 rounded-xl border border-zinc-950/10 p-4 dark:border-white/10">
+                <div className="flex min-w-0 items-start gap-3">
+                  <UserAvatar user={user} className="size-10 shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <div className="break-words font-medium">{user.name}{user.id === currentUser?.id ? ' (вы)' : ''}</div>
+                    <div className="break-all text-sm text-zinc-500">{user.email}</div>
+                  </div>
+                  <Badge color={user.active ? 'lime' : 'zinc'}>{user.active ? 'Активен' : 'Отключён'}</Badge>
+                </div>
+                <dl className="mt-4 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 text-sm">
+                  <dt className="text-zinc-500">Доступ</dt><dd className="text-right">{user.role === 'admin' ? 'Администратор' : 'Сотрудник'}</dd>
+                  <dt className="text-zinc-500">Роль в команде</dt><dd className="text-right break-words">{(user.jobRoles || [user.jobRole || 'manager']).map((role) => roleLabels[role]).join(', ')}</dd>
+                  <dt className="text-zinc-500">Добавлен</dt><dd className="text-right">{formatDate(user.createdAt)}</dd>
+                </dl>
+                <div className="mt-3 flex flex-wrap justify-end gap-1 border-t border-zinc-950/5 pt-2 dark:border-white/5">
+                  <Button plain onClick={() => { setSelected(user); setOpen(true) }}><PencilSquareIcon />Изменить</Button>
+                  {user.id !== currentUser?.id && <Button plain onClick={() => void toggleActive(user)}>{user.active ? 'Отключить' : 'Включить'}</Button>}
+                </div>
+              </section>
+            ))}
+          </div>
+          <div className="mt-8 hidden min-w-0 max-w-full md:block">
+            <Table className="[--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]"><TableHead><TableRow><TableHeader><span className="sr-only">Аватар</span></TableHeader><TableHeader>Имя</TableHeader><TableHeader>Email</TableHeader><TableHeader>Роль</TableHeader><TableHeader>Роль в команде</TableHeader><TableHeader>Статус</TableHeader><TableHeader>Добавлен</TableHeader><TableHeader><span className="sr-only">Действия</span></TableHeader></TableRow></TableHead><TableBody>{users.map((user) => <TableRow key={user.id}><TableCell><UserAvatar user={user} className="size-8" /></TableCell><TableCell className="font-medium">{user.name}{user.id === currentUser?.id ? ' (вы)' : ''}</TableCell><TableCell className="text-zinc-500">{user.email}</TableCell><TableCell>{user.role === 'admin' ? 'Администратор' : 'Сотрудник'}</TableCell><TableCell className="text-zinc-500">{(user.jobRoles || [user.jobRole || 'manager']).map((role) => roleLabels[role]).join(', ')}</TableCell><TableCell><Badge color={user.active ? 'lime' : 'zinc'}>{user.active ? 'Активен' : 'Отключён'}</Badge></TableCell><TableCell className="text-zinc-500">{formatDate(user.createdAt)}</TableCell><TableCell><div className="flex justify-end gap-1"><Button plain aria-label="Изменить" onClick={() => { setSelected(user); setOpen(true) }}><PencilSquareIcon /></Button>{user.id !== currentUser?.id && <Button plain onClick={() => void toggleActive(user)}>{user.active ? 'Отключить' : 'Включить'}</Button>}</div></TableCell></TableRow>)}</TableBody></Table>
+          </div>
+        </>
+      )}
+      <UserFormDialog open={open} onClose={() => setOpen(false)} user={selected} onSaved={saved} />
+    </>
+  )
 }

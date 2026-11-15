@@ -176,8 +176,8 @@ export function ChatBox({ orderId, peerId, compact = false, onActivity }: { orde
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
-      <div className={`min-h-0 flex-1 space-y-4 overflow-y-auto pr-1 ${compact ? 'max-h-none' : ''}`}>
+    <div className="flex h-full min-h-0 w-full flex-col">
+      <div className={`min-h-0 flex-1 space-y-4 overflow-y-auto pr-0 sm:pr-1 ${compact ? 'max-h-none' : ''}`}>
         {loading ? <Loading label="Загружаем сообщения…" /> : messages.length === 0 ? <div className="flex h-full min-h-48 items-center justify-center text-center text-sm text-zinc-500">Сообщений пока нет.<br />Начните обсуждение первым.</div> : messages.map((message, index) => {
           const own = message.user.id === user?.id
           const previous = messages[index - 1]
@@ -194,7 +194,7 @@ export function ChatBox({ orderId, peerId, compact = false, onActivity }: { orde
                     {message.attachmentUrl && message.attachmentMime?.startsWith('audio/') && <VoiceMessage message={message} />}
                     {message.body && <div className="whitespace-pre-wrap break-words text-sm/6">{message.body}</div>}
                     <div className="mt-1 flex items-center justify-end gap-1 text-[10px] opacity-60"><span>{time(message.createdAt)}</span>{own && (message.readBy.length > 0 ? <span title={orderId ? `Прочитано: ${message.readBy.length}` : 'Прочитано'} className="flex items-center"><CheckIcon className="size-3 text-blue-400" /><CheckIcon className="-ml-2 size-3 text-blue-400" /></span> : <CheckIcon className="size-3" />)}</div>
-                    <button type="button" aria-label="Добавить реакцию" onClick={() => setReactionFor(reactionFor === message.id ? null : message.id)} className={`absolute top-1/2 -translate-y-1/2 rounded-full bg-white p-1.5 text-zinc-500 opacity-0 shadow ring-1 ring-zinc-950/10 group-hover:opacity-100 max-sm:opacity-100 dark:bg-zinc-700 dark:text-zinc-200 ${own ? 'max-sm:left-1 -left-9' : 'max-sm:right-1 -right-9'}`}><FaceSmileIcon className="size-4" /></button>
+                    <button type="button" aria-label="Добавить реакцию" onClick={() => setReactionFor(reactionFor === message.id ? null : message.id)} className={`absolute top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-full bg-white text-zinc-500 opacity-0 shadow ring-1 ring-zinc-950/10 group-hover:opacity-100 max-sm:opacity-100 dark:bg-zinc-700 dark:text-zinc-200 [--btn-icon:var(--color-zinc-500)] dark:[--btn-icon:var(--color-zinc-200)] ${own ? '-left-9' : '-right-9'}`}><FaceSmileIcon className="size-4" /></button>
                     {reactionFor === message.id && <div className={`absolute top-full z-20 mt-2 flex gap-1 rounded-full bg-white p-1 shadow-lg ring-1 ring-zinc-950/10 dark:bg-zinc-700 dark:ring-white/10 ${own ? 'right-0' : 'left-0'} max-sm:right-0 max-sm:left-auto max-sm:max-w-[calc(100vw-3rem)] max-sm:overflow-x-auto`}>{quickEmojis.map((emoji) => <button key={emoji} type="button" className="rounded-full p-1 text-lg hover:bg-zinc-100 dark:hover:bg-zinc-600" onClick={() => toggleReaction(message.id, emoji)}>{emoji}</button>)}</div>}
                   </div>
                   {message.reactions.length > 0 && <div className={`mt-1 flex flex-wrap gap-1 ${own ? 'justify-end' : ''}`}>{message.reactions.map((reaction) => <button key={reaction.emoji} type="button" onClick={() => toggleReaction(message.id, reaction.emoji)} className={`rounded-full px-2 py-0.5 text-xs ring-1 ${reaction.reacted ? 'bg-blue-50 ring-blue-500/30 dark:bg-blue-500/20' : 'bg-zinc-100 ring-zinc-950/5 dark:bg-zinc-800 dark:ring-white/10'}`}>{reaction.emoji} {reaction.count}</button>)}</div>}
